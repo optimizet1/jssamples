@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bootstrap Form Example</title>
+  <!-- Include Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Form Example</h1>
+    <form id="myForm" action="validate.html" method="post">
+      <div class="form-group">
+        <label for="firstName">First Name:</label>
+        <input type="text" class="form-control" id="firstName" name="firstName" maxlength="50" required>
+      </div>
+      <div class="form-group">
+        <label for="lastName">Last Name:</label>
+        <input type="text" class="form-control" id="lastName" name="lastName" maxlength="50" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" id="email" name="email">
+      </div>
+      <div class="form-group">
+        <label for="phone">Phone Number (US format):</label>
+        <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
+      </div>
+      <div class="form-group">
+        <label for="information">Information:</label>
+        <textarea class="form-control" id="information" name="information" rows="5" maxlength="1000"></textarea>
+      </div>
+      <div class="form-check">
+        <input type="checkbox" class="form-check-input" id="agree" name="agree" required>
+        <label class="form-check-label" for="agree">Agree to contact using email or phone, agree to terms and conditions</label>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    <div id="error-message" class="mt-3 text-danger"></div>
+  </div>
+
+  <!-- Include Bootstrap JS -->
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+  <script>
+    // Form submission validation
+    document.getElementById("myForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // Prevent form submission
+      var firstName = document.getElementById("firstName").value.trim();
+      var lastName = document.getElementById("lastName").value.trim();
+      var email = document.getElementById("email").value.trim();
+      var phone = document.getElementById("phone").value.trim();
+
+      if (firstName.length < 1 || lastName.length < 1) {
+        document.getElementById("error-message").textContent = "First and Last Name must have at least 1 character.";
+        return;
+      }
+
+      if (email.length === 0 && phone.length === 0) {
+        document.getElementById("error-message").textContent = "Please provide either Email or Phone Number.";
+        return;
+      }
+
+      // Email and Phone validation (optional, customize as needed)
+      if (email.length > 0 && !validateEmail(email)) {
+        document.getElementById("error-message").textContent = "Invalid Email format.";
+        return;
+      }
+
+      if (phone.length > 0 && !validatePhone(phone)) {
+        document.getElementById("error-message").textContent = "Invalid Phone Number format. (Use US format: xxx-xxx-xxxx)";
+        return;
+      }
+
+      // If form validation passes, redirect to validate.html
+      window.location.href = "validate.html";
+    });
+
+    // Email validation function (optional, customize as needed)
+    function validateEmail(email) {
+      var re = /\S+@\S+\.\S+/;
+      return re.test(email);
+    }
+
+    // Phone validation function (optional, customize as needed)
+    function validatePhone(phone) {
+      var re = /^\d{3}-\d{3}-\d{4}$/;
+      return re.test(phone);
+    }
+  </script>
+</body>
+</html>

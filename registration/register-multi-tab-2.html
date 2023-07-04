@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Form Page</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+
+<body>
+  <div class="container">
+    <ul class="nav nav-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" href="#personal-info" data-toggle="tab">Personal Info</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#city" data-toggle="tab">City</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#preferences" data-toggle="tab">Preferences</a>
+      </li>
+    </ul>
+
+    <div class="tab-content mt-2">
+      <div class="tab-pane active" id="personal-info">
+        <h3>Personal Info</h3>
+        <form>
+          <div class="form-group">
+            <label for="first-name">First Name</label>
+            <input type="text" class="form-control" id="first-name" name="first-name" required minlength="1">
+          </div>
+          <div class="form-group">
+            <label for="last-name">Last Name</label>
+            <input type="text" class="form-control" id="last-name" name="last-name" required minlength="1">
+          </div>
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email">
+          </div>
+          <div class="form-group">
+            <label for="phone">Phone Number</label>
+            <input type="text" class="form-control" id="phone" name="phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}">
+            <small class="form-text text-muted">Format: xxx-xxx-xxxx</small>
+          </div>
+          <button class="btn btn-primary next-tab" type="button">Next</button>
+        </form>
+      </div>
+
+      <div class="tab-pane" id="city">
+        <h3>City</h3>
+        <form>
+          <div class="form-group">
+            <label for="city">City</label>
+            <input type="text" class="form-control" id="city" name="city" maxlength="100">
+          </div>
+          <button class="btn btn-primary prev-tab" type="button" data-target="#personal-info">Back</button>
+          <button class="btn btn-primary next-tab" type="button" data-target="#preferences">Next</button>
+        </form>
+      </div>
+
+      <div class="tab-pane" id="preferences">
+        <h3>Preferences</h3>
+        <form>
+          <div class="form-group">
+            <label>Color Preferences:</label>
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="red" name="colorPreference" value="red">
+              <label class="custom-control-label" for="red">Red</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="green" name="colorPreference" value="green">
+              <label class="custom-control-label" for="green">Green</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="blue" name="colorPreference" value="blue">
+              <label class="custom-control-label" for="blue">Blue</label>
+            </div>
+          </div>
+          <button class="btn btn-primary prev-tab" type="button" data-target="#city">Back</button>
+          <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('.next-tab').click(function() {
+        var currentTab = $(this).closest('.tab-pane');
+        var nextTab = currentTab.next('.tab-pane');
+        var isValid = true;
+
+        // Perform validation on the current tab fields
+        currentTab.find('input[required]').each(function() {
+          if (!$(this)[0].checkValidity()) {
+            isValid = false;
+            $(this).addClass('is-invalid');
+          } else {
+            $(this).removeClass('is-invalid');
+          }
+        });
+
+        // If validation passes, proceed to the next tab
+        if (isValid) {
+          currentTab.removeClass('active');
+          nextTab.addClass('active');
+          $('.nav-tabs a[href="#' + nextTab.attr('id') + '"]').tab('show');
+        }
+      });
+
+      $('.prev-tab').click(function() {
+        var currentTab = $(this).closest('.tab-pane');
+        var prevTab = currentTab.prev('.tab-pane');
+
+        currentTab.removeClass('active');
+        prevTab.addClass('active');
+        $('.nav-tabs a[href="#' + prevTab.attr('id') + '"]').tab('show');
+      });
+
+      $('form').submit(function(e) {
+        e.preventDefault();
+
+        var firstName = $('#first-name').val();
+        var lastName = $('#last-name').val();
+        var email = $('#email').val();
+        var phone = $('#phone').val();
+
+        // Validation for First Name and Last Name
+        if (firstName.length < 1 || lastName.length < 1) {
+          alert('First Name and Last Name are required.');
+          return;
+        }
+
+        // Validation for Email or Phone Number
+        if (!email && !phone) {
+          alert('Please enter either Email or Phone Number.');
+          return;
+        }
+
+        // Validation for Email format
+        if (email && !validateEmail(email)) {
+          alert('Please enter a valid Email address.');
+          return;
+        }
+
+        // Validation for Phone Number format
+        if (phone && !validatePhoneNumber(phone)) {
+          alert('Please enter a valid Phone Number (Format: xxx-xxx-xxxx).');
+          return;
+        }
+
+        // Submit the form
+        alert('Form submitted successfully!');
+      });
+
+      function validateEmail(email) {
+        // Email validation logic
+        // You can use regular expressions or a library like validator.js
+        return true;
+      }
+
+      function validatePhoneNumber(phone) {
+        // Phone Number validation logic
+        // You can use regular expressions or a library like libphonenumber-js
+        return true;
+      }
+    });
+  </script>
+</body>
+
+</html>
