@@ -1,0 +1,30 @@
+# List of string names
+$names = @("Name1", "Name2", "Name3") # Replace with your actual names
+
+# Path to the template file
+$templatePath = ".\zzzz\zzzz.txt"
+
+foreach ($name in $names) {
+    # Create a folder with the current name
+    $folderPath = ".\$name"
+    New-Item -Path $folderPath -ItemType Directory -Force
+
+    # Copy the template file to the new folder
+    $destinationPath = "$folderPath\zzzz.txt"
+    Copy-Item -Path $templatePath -Destination $destinationPath
+
+    # Read the copied file content
+    $content = Get-Content $destinationPath
+
+    # Replace the placeholder 'zzzz' with the current name
+    $content = $content -replace 'zzzz', $name
+
+    # Save the modified content as 'current name.txt'
+    $newFilePath = "$folderPath\$name.txt"
+    $content | Set-Content -Path $newFilePath
+
+    # Delete the original 'zzzz.txt' file
+    Remove-Item -Path $destinationPath
+}
+
+Write-Host "Process completed!"
